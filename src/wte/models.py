@@ -16,7 +16,7 @@ import random
 import hashlib
 
 from sqlalchemy import (Column, Index, ForeignKey, Integer, Unicode,
-                        UnicodeText, Table, LargeBinary)
+                        UnicodeText, Table, LargeBinary, DateTime, func)
 from sqlalchemy.engine.reflection import Inspector
 from sqlalchemy.event import listens_for
 from sqlalchemy.exc import OperationalError
@@ -72,6 +72,30 @@ def check_database_version():
                 raise DBUpgradeException(result[0], DB_VERSION)
     except OperationalError:
         raise DBUpgradeException('no version-information found', DB_VERSION)
+
+
+class RequestLog(Base):
+    u"""The :class:`~wte.models.RequestLog` represents a log of user
+    interactions with the system.
+    
+    Instances of the :class:`~wte.models.RequestLog` have the following
+    attributes:
+    
+    * ``id`` -- The unique database identifier
+    * ``user_id`` -- If the user is logged in, then the
+      :class:`~wte.models.User` id.
+    * ``timestamp`` -- The request's timestamp
+    * ``request_uri`` -- The URI of the request relative to the system's
+      base URL
+    * ``params`` -- JSON array of request parameters (both GET and POST)
+    """
+    __tablename__ = 'request_logs'
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id', name='request_logs_user_id_fk'), nullable=True)
+    timestamp = Column(DateTime(), server_default=func.now())
+    request_uri = Column(UnicodeText())
+    params = Column(UnicodeText())
 
 
 class User(Base):

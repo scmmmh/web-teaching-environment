@@ -16,7 +16,7 @@ from pyramid.view import view_config
 from pywebtools.renderer import render
 
 from wte.decorators import current_user
-from . import (user, frontend, part, asset, user_role)
+from . import (user, evaluation, frontend, part, asset, user_role)
 
 
 def init(config, settings):
@@ -33,6 +33,7 @@ def init(config, settings):
     asset.init(config)
     frontend.init(config)
     user_role.init(config)
+    evaluation.init(config)
 
 
 @view_config(route_name='root')

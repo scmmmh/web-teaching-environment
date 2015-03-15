@@ -1,6 +1,10 @@
 Web Teaching Environment README
 ===============================
 
+**WARNING** THIS IS THE EVALUATION VERSION OF THE WEB TEACHING ENVIRONMENT.
+ITS FOCUS ON EVAULATION MEANS THAT THERE IS REDUCED SECURITY AROUND USER
+REGISTRATION. IT MUST NOT BE USED IN A PRODUCTION ENVIRONMENT.
+
 This README is primarily written for developers wishing to work on the Web
 Teaching Environment. If you just want to use the Web Teaching Environment,
 please consult the documentation at ...
