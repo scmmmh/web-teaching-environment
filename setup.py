@@ -44,7 +44,7 @@ setup(name='WebTeachingEnvironment',
       package_dir = {'': 'src'},
       include_package_data=True,
       zip_safe=False,
-      test_suite='wte',
+      test_suite='tests',
       install_requires=requires,
       entry_points="""\
       [paste.app_factory]
