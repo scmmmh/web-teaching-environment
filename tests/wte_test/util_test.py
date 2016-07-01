@@ -7,14 +7,13 @@ Unit tests for :mod:`wte.util`
 .. moduleauthor:: Mark Hall <mark.hall@work.room3b.eu>
 """
 from nose.tools import eq_, ok_
-from pyramid.httpexceptions import HTTPSeeOther
 
 
 def version_test():
     u"""Test the basic :data:`wte.util.VERSION` number"""
-    from wte.util import VERSION
+    from wte.util import version
 
-    eq_('0.99', VERSION)
+    eq_('str', version().__class__.__name__)
 
 
 def state_object_test():
@@ -31,143 +30,43 @@ def state_object_test():
 def unauthorised_redirect_to_login_test():
     u"""Test that :func:`wte.util.unauthorised_redirect` redirects to
     the login page."""
-    from wte.models import User
-    from wte.util import unauthorised_redirect
-    from wte_test import TestRequest, TestSession
-
-    user = User('anonymous@example.com', 'Anyonymous')
-    user.logged_in = False
-    request = TestRequest(current_url='http://current.url',
-                          current_user=user,
-                          session=TestSession())
-    try:
-        unauthorised_redirect(request)
-        ok_(False, 'Must not reach this line')
-    except HTTPSeeOther as e:
-        eq_('http://user.login?return_to=http%3A%2F%2Fcurrent.url', e.location)
-        ok_('auth' in request.session.queues)
-        eq_(1, len(request.session.queues['auth']))
-        eq_('Please log in to access this area.', request.session.queues['auth'][0])
+    ok_(False, 'Must not reach this line')
 
 
 def unauthorised_redirect_to_login_with_message_test():
     u"""Test that :func:`wte.util.unauthorised_redirect` redirects to
     the login page with a custom message."""
-    from wte.models import User
-    from wte.util import unauthorised_redirect
-    from wte_test import TestRequest, TestSession
-
-    user = User('anonymous@example.com', 'Anyonymous')
-    user.logged_in = False
-    request = TestRequest(current_url='http://current.url',
-                          current_user=user,
-                          session=TestSession())
-    try:
-        unauthorised_redirect(request, message='You are not allowed in')
-        ok_(False, 'Must not reach this line')
-    except HTTPSeeOther as e:
-        eq_('http://user.login?return_to=http%3A%2F%2Fcurrent.url', e.location)
-        ok_('auth' in request.session.queues)
-        eq_(1, len(request.session.queues['auth']))
-        eq_('You are not allowed in', request.session.queues['auth'][0])
+    ok_(False, 'Must not reach this line')
 
 
 def unauthorised_redirect_to_root_test():
     u"""Test that :func:`wte.util.unauthorised_redirect` redirects to
     the root page for logged-in users."""
-    from wte.models import User
-    from wte.util import unauthorised_redirect
-    from wte_test import TestRequest, TestSession
-
-    user = User('anonymous@example.com', 'Anyonymous')
-    user.logged_in = True
-    request = TestRequest(current_url='http://current.url',
-                          current_user=user,
-                          session=TestSession())
-    try:
-        unauthorised_redirect(request)
-        ok_(False, 'Must not reach this line')
-    except HTTPSeeOther as e:
-        eq_('http://root', e.location)
-        ok_('auth' in request.session.queues)
-        eq_(1, len(request.session.queues['auth']))
-        eq_('You are not authorised to access this area.', request.session.queues['auth'][0])
+    ok_(False, 'Must not reach this line')
 
 
 def unauthorised_redirect_to_root_with_message_test():
     u"""Test that :func:`wte.util.unauthorised_redirect` redirects to
     the root page for logged-in users with a custom message."""
-    from wte.models import User
-    from wte.util import unauthorised_redirect
-    from wte_test import TestRequest, TestSession
-
-    user = User('anonymous@example.com', 'Anyonymous')
-    user.logged_in = True
-    request = TestRequest(current_url='http://current.url',
-                          current_user=user,
-                          session=TestSession())
-    try:
-        unauthorised_redirect(request, message='You are not allowed in')
-        ok_(False, 'Must not reach this line')
-    except HTTPSeeOther as e:
-        eq_('http://root', e.location)
-        ok_('auth' in request.session.queues)
-        eq_(1, len(request.session.queues['auth']))
-        eq_('You are not allowed in', request.session.queues['auth'][0])
+    ok_(False, 'Must not reach this line')
 
 
 def unauthorised_redirect_to_location_test():
     u"""Test that :func:`wte.util.unauthorised_redirect` redirects to
     a custom page for logged-in users."""
-    from wte.models import User
-    from wte.util import unauthorised_redirect
-    from wte_test import TestRequest, TestSession
-
-    user = User('anonymous@example.com', 'Anyonymous')
-    user.logged_in = True
-    request = TestRequest(current_url='http://current.url',
-                          current_user=user,
-                          session=TestSession())
-    try:
-        unauthorised_redirect(request, redirect_to='http://target.url')
-        ok_(False, 'Must not reach this line')
-    except HTTPSeeOther as e:
-        eq_('http://target.url', e.location)
-        ok_('auth' in request.session.queues)
-        eq_(1, len(request.session.queues['auth']))
-        eq_('You are not authorised to access this area.', request.session.queues['auth'][0])
+    ok_(False, 'Must not reach this line')
 
 
 def send_email_no_config_test():
     u"""Tests that :func:`wte.util.send_email` works if no "email.smtp_host"
     is set."""
-    from wte.util import send_email, State, CACHED_SETTINGS
-    from wte_test import TestRequest
-
-    CACHED_SETTINGS.clear()
-    request = TestRequest(registry=State(settings={}))
-    send_email(request,
-               'receiver@example.com',
-               'sender@example.com',
-               'Test E-Mail',
-               'This is the text of the e-mail')
-    ok_(True)
+    ok_(False, 'Must not reach this line')
 
 
 def send_email_fail_test():
     u"""Tests that :func:`wte.util.send_email` works when an invalid "email.smtp_host"
     is set."""
-    from wte.util import send_email, State, CACHED_SETTINGS
-    from wte_test import TestRequest
-
-    CACHED_SETTINGS.clear()
-    request = TestRequest(registry=State(settings={'email.smtp_host': 'localhost:76543'}))
-    send_email(request,
-               'receiver@example.com',
-               'sender@example.com',
-               'Test E-Mail',
-               'This is the text of the e-mail')
-    ok_(True)
+    ok_(False, 'Must not reach this line')
 
 
 def convert_type_test():
@@ -201,20 +100,4 @@ def convert_type_bool_test():
 def get_config_setting_test():
     u"""Tests getting configuration settings using
     :func:`wte.util.get_config_setting`."""
-    from wte.util import CACHED_SETTINGS, get_config_setting, State
-    from wte_test import TestRequest
-
-    request = TestRequest(registry=State(settings={'test': 'Test',
-                                                   'number': '1'}))
-    CACHED_SETTINGS.clear()
-    eq_(0, len(CACHED_SETTINGS))
-    eq_('Test', get_config_setting(request, 'test'))
-    eq_(1, len(CACHED_SETTINGS))
-    eq_('Test', get_config_setting(request, 'test'))
-    eq_(1, len(CACHED_SETTINGS))
-    eq_(1, get_config_setting(request, 'number', target_type='int'))
-    eq_(2, len(CACHED_SETTINGS))
-    eq_(1, get_config_setting(request, 'number', target_type='int'))
-    eq_(2, len(CACHED_SETTINGS))
-    eq_(True, get_config_setting(request, 'switch', target_type='boolean', default=True))
-    eq_(3, len(CACHED_SETTINGS))
+    ok_(False, 'Must not reach this line')
