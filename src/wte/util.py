@@ -63,26 +63,6 @@ def version():
     return asset.version('WebTeachingEnvironment')
 
 
-def timing_tween_factory(handler, registry):
-    """Pyramid tween factory that logs the time taken for a request.
-    Will not time static requests.
-    """
-    import time
-    logger = logging.getLogger(__name__)
-
-    def timing_tween(request):
-        """Handle the actual timing of the request."""
-        start = time.time()
-        try:
-            response = handler(request)
-        finally:
-            end = time.time()
-            if not request.path.startswith('/static'):
-                logger.info('%s - %.4f seconds' % (request.path, (end - start)))
-        return response
-    return timing_tween
-
-
 def ordered_counted_set(items):
     """Returns a list of ``(item, count)`` tuples derived from the ``items``.
     Each unique item is listed once with the number of times it appears in
