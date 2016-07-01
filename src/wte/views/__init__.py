@@ -61,7 +61,7 @@ def help_page(request):
         if mimetype:
             mimetype = mimetype[0]
         else:
-            mimetype = 'unknown/unknown'
+            mimetype = 'unknown/unknown'  # pragma: no cover
         return Response(resource_string('wte', url),
                         content_type=mimetype)
     except:
@@ -73,6 +73,7 @@ def help_page(request):
 def notfound_404(request):
     """Handles 404 errors
     """
+    request.response.status = '404'
     return {'crumbs': [{'title': 'Not Found'}]}
 
 
@@ -81,4 +82,5 @@ def notfound_404(request):
 def servererror_500(request):
     """Handles 500 errors
     """
+    request.response.status = '500'
     return {'crumbs': [{'title': 'Internal Server Error'}]}

@@ -6,7 +6,7 @@ Unit tests for :mod:`wte.util`
 
 .. moduleauthor:: Mark Hall <mark.hall@work.room3b.eu>
 """
-from nose.tools import eq_, ok_
+#from nose.tools import eq_, ok_
 
 
 def version_test():

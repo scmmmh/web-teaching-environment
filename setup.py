@@ -53,5 +53,7 @@ setup(name='WebTeachingEnvironment',
       main = wte:main
       [console_scripts]
       WTE = wte.scripts.main:main
+      [pytest11]
+      pytest_pyramid = pywebtools.testing
       """,
       )
