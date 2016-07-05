@@ -40,7 +40,7 @@ CODEMIRROR_MODES = {'text/html': ['javascript',
                                   'css',
                                   'xml',
                                   'htmlmixed',
-                                  ('../addon/fold/', 'xml-fold'),
+                                  ('../addon/fold', 'xml-fold'),
                                   ('../addon/edit', 'matchtags')],
                     'text/css': ['css',
                                  ('../addon/edit', 'matchbrackets'),
@@ -337,7 +337,7 @@ def natural_list(items, separator=', ', final_separator=' & '):
     elif len(items) == 2:
         return final_separator.join(items)
     else:
-        return '%s %s %s' % (separator.join(items[:-1]), final_separator, items[-1])
+        return '%s%s%s' % (separator.join(items[:-1]), final_separator, items[-1])
 
 
 def set_list(items):

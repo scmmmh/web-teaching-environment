@@ -6,6 +6,8 @@ Functional Tests for :mod:`wte.views`
 
 .. moduleauthor:: Mark Hall <mark.hall@work.room3b.eu>
 """
+
+
 def test_root(functional_tester):
     """Tests the root view."""
     functional_tester.get_url('/')

@@ -15,8 +15,8 @@ import pytest
 import transaction
 
 from alembic import config, command
-from pkg_resources import resource_stream
 from pyramid.paster import (get_app, get_appsettings, setup_logging)
+from pyramid.request import Request
 from pywebtools.sqlalchemy import DBSession, Base
 from pywebtools.pyramid.auth.models import User, PermissionGroup, Permission
 from sqlalchemy import engine_from_config
@@ -154,7 +154,7 @@ class RequestTesterMixin(object):
     def has_status(self, status):
         if self._response:
             assert self._response.status_int == status,\
-            'Response status is %s instead of %s' % (self._response.status_int, status)
+                'Response status is %s instead of %s' % (self._response.status_int, status)
         else:
             assert False, 'No request sent'
 
@@ -218,3 +218,27 @@ def functional_tester(app, database):
     """
     tester = FunctionalTester(app)
     yield tester
+
+
+@pytest.yield_fixture
+def request(app):
+    """Fixture that provides a :class:`~pyramid.request.Request` that is
+    simulated to have requested http://localhost."""
+    request = Request({'REQUEST_METHOD': 'GET',
+                       'SCRIPT_NAME': '',
+                       'PATH_INFO': '',
+                       'QUERY_STRING': '',
+                       'CONTENT_TYPE': '',
+                       'CONTENT_LENGTH': '',
+                       'SERVER_NAME': 'localhost',
+                       'SERVER_PORT': '80',
+                       'SERVER_PROTOCOL': 'HTTP/1.0',
+                       'wsgi.version': (1, 0),
+                       'wsgi.url_scheme': 'http',
+                       'wsgi.input': '',
+                       'wsgi.errors': '',
+                       'wsgi.multithread': False,
+                       'wsgi.multiprocess': False,
+                       'wsgi.run_once': False})
+    request.registry = app.registry
+    yield request
