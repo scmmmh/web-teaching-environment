@@ -291,7 +291,7 @@ def split_seconds(seconds):
     return (days, hours, minutes, seconds)
 
 
-def template_for_part(part):
+def template_for_part(part):  # TODO: Dead code?
     """Returns the correct partial template path for a given
     :class:`~wte.models.Part`. If there is no partial template for the given
     :class:`~wte.models.Part`, then ``None`` is returned.
