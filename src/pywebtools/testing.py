@@ -159,44 +159,7 @@ class RequestTesterMixin(object):
             assert False, 'No request sent'
 
 
-class DBTesterMixin(object):
-    """The :class:`~pywebtools.testing.DBTesterMixin` provides functionality for interacting with the
-    database via the :class:`~pywebtools.testing.FunctionalTester`.
-    """
-
-    def __init__(self):
-        self._dbsession = DBSession()
-
-    def get_model(self, name, query):
-        """Retrieve a single instance of the model ``name``, filtered by the ``query``.
-
-        :param name: The name of the model to get the instance for
-        :type name: ``unicode``
-        :param query: The query to use for selecting the instance
-        :type query: ``unicode``
-        :return: The result of the query
-        """
-        cls = getattr(models, name)
-        return self._dbsession.query(cls).filter(query).first()
-
-    def create_model(self, name, params):
-        """Create a new instance of the model ``name`` with the given ``params``.
-
-        :param name: The name of the model to create the instance of
-        :type name: ``unicode``
-        :param params: The initial parameters to use for creating the instance
-        :type params: ``dict``
-        :return: The new instance
-        """
-        cls = getattr(models, name)
-        with transaction.manager:
-            model = cls(**params)
-            self._dbsession.add(model)
-        self._dbsession.add(model)
-        return model
-
-
-class FunctionalTester(RequestTesterMixin, DBTesterMixin):
+class FunctionalTester(RequestTesterMixin):
     """The :class:`~pywebtools.testing.FunctionalTester` provides an easy interface for running
     functional tests. It mixes in :class:`~pywebtools.testing.RequestTesterMixin` and
     :class:`~pywebtools.testing.DBTesterMixin` to provide the actual functionality.
@@ -209,11 +172,10 @@ class FunctionalTester(RequestTesterMixin, DBTesterMixin):
         self._app = app
         self._test = TestApp(app)
         self._response = None
-        DBTesterMixin.__init__(self)
 
 
 @pytest.yield_fixture
-def functional_tester(app, database):
+def functional_tester(app):
     """Fixture that provides a :class:`~pywebtools.testing.FunctionalTester`.
     """
     tester = FunctionalTester(app)
